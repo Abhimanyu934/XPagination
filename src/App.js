@@ -65,7 +65,7 @@ const App = () => {
           Previous
         </button>
         {/* This is the crucial bit: Cypress can now find a <span> that contains "1" */}
-        <span>{currentPage}</span>
+        <h1>{currentPage}</h1>
         <button onClick={nextPage} disabled={currentPage === totalPages}>
           Next
         </button>
