@@ -25,29 +25,20 @@ const App = () => {
     fetchData();
   }, []);
 
-  // Calculate the index of the first item of the current page
-  const indexOfLastEmployee = currentPage * itemsPerPage;
-  const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-  const currentEmployees = employees.slice(
-    indexOfFirstEmployee,
-    indexOfLastEmployee
-  );
+  const totalPages = Math.ceil(employees.length / itemsPerPage);
+  const startIdx = (currentPage - 1) * itemsPerPage;
+  const currentEmployees = employees.slice(startIdx, startIdx + itemsPerPage);
 
-  // Handle page change
   const nextPage = () => {
-    if (currentPage < Math.ceil(employees.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
-    }
+    setCurrentPage((p) => Math.min(p + 1, totalPages));
   };
 
   const previousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+    setCurrentPage((p) => Math.max(p - 1, 1));
   };
 
   return (
-    <div>
+    <div className="App">
       <h1>Employee Data Table</h1>
       <table>
         <thead>
@@ -59,8 +50,8 @@ const App = () => {
           </tr>
         </thead>
         <tbody>
-          {currentEmployees.map((employee, index) => (
-            <tr key={index}>
+          {currentEmployees.map((employee) => (
+            <tr key={employee.id}>
               <td>{employee.id}</td>
               <td>{employee.name}</td>
               <td>{employee.email}</td>
@@ -69,15 +60,13 @@ const App = () => {
           ))}
         </tbody>
       </table>
-      <div className="buttoncontainer">
+      <div className="pagination">
         <button onClick={previousPage} disabled={currentPage === 1}>
           Previous
         </button>
-        <button> {currentPage} </button>
-        <button
-          onClick={nextPage}
-          disabled={currentPage === Math.ceil(employees.length / itemsPerPage)}
-        >
+        {/* This is the crucial bit: Cypress can now find a <span> that contains "1" */}
+        <span>{currentPage}</span>
+        <button onClick={nextPage} disabled={currentPage === totalPages}>
           Next
         </button>
       </div>
@@ -86,3 +75,5 @@ const App = () => {
 };
 
 export default App;
+
+
